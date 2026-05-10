@@ -1,0 +1,15 @@
+torch==2.7.1+cu118
+torchvision==0.22.1+cu118
+torchaudio==2.7.1+cu118
+transformers==5.8.0
+datasets==4.8.5
+accelerate
+seqeval==1.2.2
+pytorch-crf==0.7.2
+sentence-transformers==5.4.1
+scikit-learn==1.8.0
+streamlit==1.57.0
+PyMuPDF==1.27.2.3
+numpy==2.4.4
+sentencepiece==0.2.1
+protobuf==7.34.1
