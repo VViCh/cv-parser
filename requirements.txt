@@ -12,4 +12,5 @@ streamlit==1.57.0
 PyMuPDF==1.27.2.3
 numpy==2.4.4
 sentencepiece==0.2.1
-protobuf==7.34.1
+protobuf==7.34.1matplotlib
+jupyter

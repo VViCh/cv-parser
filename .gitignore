@@ -39,3 +39,6 @@ Thumbs.db
 
 # Local datasets or exports if you do not want them committed
 cv/
+*.zip
+deployment/
+saved old v2/
