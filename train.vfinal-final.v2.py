@@ -23,15 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 MODELS_TO_TRAIN = [
-    "distilbert-base-uncased",
-    "bert-base-uncased",
-    "bert-base-cased",
-    "roberta-base",
-    "albert-base-v2",
-    "allenai/scibert_scivocab_uncased",
-    "microsoft/deberta-v3-base",
-    "google/electra-base-discriminator",
-    "distilroberta-base"
+    "microsoft/deberta-v3-base"
 ]
 
 EPOCHS = 40
@@ -200,14 +192,7 @@ for model_idx, model_name in enumerate(MODELS_TO_TRAIN, 1):
                 safe_name = model_name.replace('/', '_')
                 model_path = f"resume_ner_model_final_{safe_name}.pth"
 
-                ner_weights = {
-                    "classifier.weight": model.classifier.weight,
-                    "classifier.bias": model.classifier.bias,
-                    "crf.transitions": model.crf.transitions,
-                    "crf.start_transitions": model.crf.start_transitions,
-                    "crf.end_transitions": model.crf.end_transitions,
-                }
-                torch.save(ner_weights, model_path)
+                torch.save(model.state_dict(), model_path)
                 logger.info(f"Improved by {reason}. Saved NER weights to {model_path}")
             else:
                 patience_counter += 1

@@ -102,24 +102,13 @@ def load_models(selected_model_name, selected_weights_path):
     if selected_weights_path:
         try:
             weights = torch.load(selected_weights_path, map_location=device)
-            # Check if this is a partial NER weights dict or full state_dict
-            if "classifier.weight" in weights:
-                # New format: only NER weights (classifier + CRF)
-                model.classifier.weight.data = weights["classifier.weight"]
-                model.classifier.bias.data = weights["classifier.bias"]
-                model.crf.transitions.data = weights["crf.transitions"]
-                model.crf.start_transitions.data = weights["crf.start_transitions"]
-                model.crf.end_transitions.data = weights["crf.end_transitions"]
-                st.caption(f"Success: Loaded NER weights from {selected_weights_path}")
-            else:
-                # Old format: full state_dict (may have conflicts)
-                try:
-                    model.load_state_dict(weights, strict=False)
-                    st.caption(f"Note: Loaded with strict=False (may have mismatches)")
-                except Exception as e:
-                    st.caption(f"Error: Failed to load weights: {e}")
+            try:
+                model.load_state_dict(weights, strict=False)
+                st.caption(f"Success: Loaded full state_dict from {selected_weights_path}")
+            except Exception as e:
+                st.caption(f"Error: Failed to load weights: {e}")
         except Exception as e:
-            st.caption(f"Error: Could not load weights: {e}")
+            st.caption(f"Error: Could not read weights file: {e}")
     
     model.float()
     model.eval()
