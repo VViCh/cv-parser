@@ -55,7 +55,7 @@ req_skills = st.sidebar.text_area("Required Skills", st.session_state.req_skills
 req_exp = st.sidebar.text_area("Experience", st.session_state.req_exp)
 req_edu = st.sidebar.text_area("Education", st.session_state.req_edu)
 
-def pick_best_model(training_results_path="training_results.vfinal-final.v2.json"):
+def pick_best_model(training_results_path="trained_models_full/training_results.vfinal-final.v2.json"):
     results_file = Path(training_results_path)
     if not results_file.exists():
         return None, None
@@ -75,13 +75,13 @@ def pick_best_model(training_results_path="training_results.vfinal-final.v2.json
     return best_name, best_path
 
 
-def list_available_models(training_results_path="training_results.vfinal-final.v2.json"):
+def list_available_models(training_results_path="trained_models_full/training_results.vfinal-final.v2.json"):
     models = {}
     best_name, best_path = pick_best_model(training_results_path)
     if best_name:
         models["Best (auto)"] = (best_name, best_path)
 
-    for weights_file in sorted(Path(".").glob("resume_ner_model_*.pth")):
+    for weights_file in sorted(Path("trained_models_full").glob("resume_ner_model_*.pth")):
         raw_name = weights_file.stem.replace("resume_ner_model_", "")
         model_name = raw_name.replace("_", "/") if "/" not in raw_name else raw_name
         models[model_name] = (model_name, str(weights_file))
