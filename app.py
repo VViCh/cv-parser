@@ -55,7 +55,7 @@ req_skills = st.sidebar.text_area("Required Skills", st.session_state.req_skills
 req_exp = st.sidebar.text_area("Experience", st.session_state.req_exp)
 req_edu = st.sidebar.text_area("Education", st.session_state.req_edu)
 
-def pick_best_model(training_results_path="training_results.json"):
+def pick_best_model(training_results_path="training_results.vfinal-final.v2.json"):
     results_file = Path(training_results_path)
     if not results_file.exists():
         return None, None
@@ -75,7 +75,7 @@ def pick_best_model(training_results_path="training_results.json"):
     return best_name, best_path
 
 
-def list_available_models(training_results_path="training_results.json"):
+def list_available_models(training_results_path="training_results.vfinal-final.v2.json"):
     models = {}
     best_name, best_path = pick_best_model(training_results_path)
     if best_name:
