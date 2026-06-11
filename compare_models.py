@@ -13,11 +13,12 @@ from seqeval.metrics import accuracy_score, f1_score
 models_to_compare = [
     "distilbert-base-uncased",
     "bert-base-uncased",
+    "bert-base-cased",
     "roberta-base",
     "albert-base-v2",
-    # "microsoft/deberta-v3-base",
+    "allenai/scibert_scivocab_uncased",
+    "microsoft/deberta-v3-base",
     "google/electra-base-discriminator",
-    # "SpanBERT/spanbert-base-cased",
     "distilroberta-base"
 ]
 

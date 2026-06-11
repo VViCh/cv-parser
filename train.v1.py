@@ -170,8 +170,17 @@ for model_idx, model_name in enumerate(MODELS_TO_TRAIN, 1):
                 # Save best weights securely
                 safe_name = model_name.replace('/', '_')
                 model_path = f"resume_ner_model_{safe_name}.pth"
-                torch.save(model.state_dict(), model_path)
-                logger.info(f"Validation loss improved. Saved to {model_path}")
+                
+                # Save only NER-specific weights (classifier + CRF), not the transformer backbone
+                ner_weights = {
+                    "classifier.weight": model.classifier.weight,
+                    "classifier.bias": model.classifier.bias,
+                    "crf.transitions": model.crf.transitions,
+                    "crf.start_transitions": model.crf.start_transitions,
+                    "crf.end_transitions": model.crf.end_transitions,
+                }
+                torch.save(ner_weights, model_path)
+                logger.info(f"Validation loss improved. Saved NER weights to {model_path}")
             else:
                 patience_counter += 1
                 logger.info(f"No improvement ({patience_counter}/{PATIENCE})")
@@ -195,7 +204,7 @@ for model_idx, model_name in enumerate(MODELS_TO_TRAIN, 1):
         
         logger.info(f"✓ Model completed in {elapsed_time:.1f}s")
         
-        del model, optimizer, scheduler, tokenizer, train_loader, val_loader, full_dataset
+        del model, optimizer, tokenizer, train_loader, val_loader, full_dataset
         gc.collect()
         torch.cuda.empty_cache()
         

@@ -1,16 +1,32 @@
+import ssl
+ssl.create_default_context = ssl._create_unverified_context
+
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 print("Loading semantic model (all-MiniLM-L6-v2)...")
 sbert_model = SentenceTransformer('all-MiniLM-L6-v2') 
 
-def compute_similarity(text1, text2):
-    if not text1 or not text2:
+def compute_similarity(cand_text, req_text):
+    if not cand_text or not req_text:
         return 0.0
-    embedding1 = sbert_model.encode([text1])
-    embedding2 = sbert_model.encode([text2])
-    sim = cosine_similarity(embedding1, embedding2)[0][0]
-    return sim
+    
+    cand_items = [item.strip() for item in cand_text.split(',')]
+    req_items = [item.strip() for item in req_text.split(',')]
+    
+    cand_items = [item for item in cand_items if item]
+    req_items = [item for item in req_items if item]
+    
+    if not cand_items or not req_items:
+        return 0.0
+        
+    cand_embeddings = sbert_model.encode(cand_items)
+    req_embeddings = sbert_model.encode(req_items)
+    
+    sim_matrix = cosine_similarity(req_embeddings, cand_embeddings)
+    max_sims = sim_matrix.max(axis=1)
+    
+    return float(max_sims.mean())
 
 def calculate_fit(cv_data, hr_criteria):
     skills_sim = compute_similarity(cv_data['skills'], hr_criteria['skills'])
