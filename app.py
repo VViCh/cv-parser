@@ -252,8 +252,11 @@ if run_scan:
         # potentially sensitive extracted information in the main UI.
         # To re-enable the detailed JSON view for debugging, uncomment
         # the two lines below.
-        # st.subheader("Candidate Details")
-        # st.json(candidate_data)
+        st.subheader("Extracted CV Entities")
+        with st.expander("View NER Extraction Results", expanded=True):
+            st.markdown(f"**Skills:**\n> {candidate_data.get('skills', 'None extracted')}")
+            st.markdown(f"**Experience:**\n> {candidate_data.get('experience', 'None extracted')}")
+            st.markdown(f"**Education:**\n> {candidate_data.get('education', 'None extracted')}")
 
     with c2:
         st.subheader("Analysis Breakdown")
