@@ -5,14 +5,23 @@ from torch.utils.data import DataLoader, Subset
 from model_ner_v2 import ResumeNERModel
 from preprocess_training_v2 import ResumeDataset, LABEL_LIST
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
+import torch
+import gc
+import sys
+import os
+from torch.optim import AdamW
+from torch.utils.data import DataLoader, Subset
+from model_ner_v2 import ResumeNERModel
+from preprocess_training_v2 import ResumeDataset, LABEL_LIST
+from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 import json
 import time
 import logging
 import random
 from seqeval.metrics import precision_score, recall_score, f1_score
 
-os.makedirs("trained_models_full", exist_ok=True)
-log_file = "trained_models_full/training_log.vfinal-final.v2.txt"
+os.makedirs("models", exist_ok=True)
+log_file = "models/training_log.vfinal-final.v2.txt"
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(message)s',
@@ -199,7 +208,7 @@ for model_idx, model_name in enumerate(MODELS_TO_TRAIN, 1):
                 loss_worse_count = 0
 
                 safe_name = model_name.replace('/', '_')
-                model_path = f"trained_models_full/resume_ner_model_final_{safe_name}.pth"
+                model_path = f"models/resume_ner_model_final_{safe_name}.pth"
 
                 torch.save(model.state_dict(), model_path)
                 logger.info(f"Improved by {reason}. Saved NER weights to {model_path}")
@@ -229,7 +238,7 @@ for model_idx, model_name in enumerate(MODELS_TO_TRAIN, 1):
             "best_recall": best_metrics["recall"],
             "epochs_trained": epoch + 1,
             "time_seconds": elapsed_time,
-            "model_path": f"trained_models_full/resume_ner_model_final_{model_name.replace('/', '_')}.pth"
+            "model_path": f"models/resume_ner_model_final_{model_name.replace('/', '_')}.pth"
         }
 
         logger.info(f"Model completed in {elapsed_time:.1f}s")
@@ -258,8 +267,8 @@ for model_name, metrics in results.items():
         logger.info(f"Epochs:        {metrics['epochs_trained']}")
         logger.info(f"Time taken:    {metrics['time_seconds']:.1f}s")
 
-with open("trained_models_full/training_results.vfinal-final.v2.json", 'w') as f:
+with open("models/training_results.vfinal-final.v2.json", 'w') as f:
     json.dump(results, f, indent=4)
 
-logger.info("\nDetailed results saved to trained_models_full/training_results.vfinal-final.v2.json")
+logger.info("\nDetailed results saved to models/training_results.vfinal-final.v2.json")
 logger.info(f"Full log saved to {log_file}")
