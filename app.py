@@ -121,6 +121,7 @@ def load_models(selected_model_name, selected_weights_path):
         except Exception as e:
             st.caption(f"Error: Could not load weights: {e}")
     
+    model.float()
     model.eval()
     return model, tokenizer, device, model_name, selected_weights_path
 

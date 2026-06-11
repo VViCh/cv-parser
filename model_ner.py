@@ -32,6 +32,7 @@ class ResumeNERModel(nn.Module):
         sequence_output = outputs.last_hidden_state
         
         sequence_output = self.dropout(sequence_output)
+        sequence_output = sequence_output.float()
         emissions = self.classifier(sequence_output)
         
         emissions = emissions.float()
